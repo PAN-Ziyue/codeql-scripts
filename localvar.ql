@@ -1,8 +1,10 @@
 import cpp
 
-from LocalVariable localvar
+from LocalVariable lv
 where
-  not localvar.getFunction().isInline() and
-  not localvar.isInMacroExpansion() and
-  not localvar.getType().getName().matches("(unnamed%") // filter out unnamed types
-select localvar, localvar.getFunction(), localvar.getType()
+  not lv.getFunction().isInline() and
+  not lv.isInMacroExpansion() and
+  not lv.getName().matches("(unnamed%") and
+  not lv.getType().getUnderlyingType().getName().matches("(unnamed%") and
+  lv.getLocation().toString().matches("%src/%")
+select lv, lv.getFunction(), lv.getType().getUnderlyingType()
